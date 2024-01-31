@@ -20,9 +20,9 @@ public class TaskManager {
         String input = "";
         boolean isTrue = true;
         while (isTrue) {
-            System.out.println(welcome);
+            System.out.println(ConsoleColors.BLUE + welcome);
             for (KeyWord word : KeyWord.values()) {
-                System.out.println(word);
+                System.out.println(ConsoleColors.RESET + word);
             }
             Scanner scanner = new Scanner(System.in);
             input = scanner.nextLine();
@@ -36,50 +36,42 @@ public class TaskManager {
             }
             switch (keyWord) {
                 case add:
-                    System.out.println("add");
                     addTask();
                     break;
                 case remove:
-                    System.out.println("remove");
                     removeTask();
                     break;
                 case list:
-                    System.out.println("list:");
                     printTaskList();
                     break;
                 case exit:
-                    System.out.println("exit");
                     isTrue = false;
                     scanner.close();
+                    System.out.println(ConsoleColors.RED + "Bye, bye");
 
             }
         }
     }
 
-
     public static void addTask() {
         StringBuilder chain = new StringBuilder();
         System.out.println("Please add task description");
         Scanner scanner1 = new Scanner(System.in);
-        chain.append(scanner1.nextLine()).append(" ");
+        chain.append(scanner1.nextLine()).append(", ");
         System.out.println("Please add task due date");
-        chain.append(scanner1.nextLine()).append(" ");
+        chain.append(scanner1.nextLine()).append(", ");
         System.out.println("Is your task is important: true/false");
         while (!scanner1.hasNextBoolean()) {
             scanner1.next();
             System.out.println("Enter true or false");
-
         }
         chain.append(scanner1.nextBoolean()).append("\n");
-
         Path path = Paths.get("./src/main/resources/tasks.csv");
         try {
             Files.writeString(path, chain, StandardOpenOption.APPEND);
         } catch (IOException ex) {
             System.out.println("The file could not be saved");
-
         }
-        //scanner1.close();
 
     }
 
@@ -100,40 +92,40 @@ public class TaskManager {
         Path path = Paths.get("./src/main/resources/tasks.csv");
         try {
             counter = Files.readAllLines(path).size();
-            System.out.println(counter);
             if (index < counter) {
                 tab = Files.readAllLines(path).toArray(new String[0]);
                 System.out.println(tab.length);
             }
         } catch (IOException e) {
             System.out.println(e);
-
         }
+
         String[] forCopyToFile = ArrayUtils.remove(tab, index);
         for (String copy : forCopyToFile) {
             chain1.append(copy).append("\n");
         }
+
         forReplace = chain1.toString();
-        System.out.println(forReplace);
         Path path1 = Paths.get("./src/main/resources/tasks.csv");
 
         try {
             Files.writeString(path1, forReplace);
             if (tab.length > forCopyToFile.length) {
                 System.out.println(index + "\n" + "Value was successfully deleted");
-
             }
         } catch (IOException ex) {
             System.out.println("The file could not be saved");
         }
-
     }
 
     public static void printTaskList() {
         Path path = Paths.get("./src/main/resources/tasks.csv");
         try {
-            for (String line : Files.readAllLines(path))
-                System.out.println(line);
+            int numIndex = 0;
+            for (String line : Files.readAllLines(path)) {
+                System.out.println(numIndex + " : " + line);
+                numIndex++;
+            }
         } catch (IOException e) {
             System.out.println(e);
         }
