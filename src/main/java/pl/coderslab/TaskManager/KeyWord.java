@@ -1,4 +1,4 @@
-package pl.coderlab.TaskManager;
+package pl.coderslab.TaskManager;
 
 public enum KeyWord {
     add,remove,list,exit
