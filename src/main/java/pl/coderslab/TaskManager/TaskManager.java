@@ -79,45 +79,44 @@ public class TaskManager {
         int counter = 0;
         int index;
         StringBuilder chain1 = new StringBuilder();
-        String forReplace = "";
+        String forReplace;
         String[] tab = new String[0];
         Scanner scanner2 = new Scanner(System.in);
         System.out.println("Please select number to remove");
         String ifIsParsable = scanner2.nextLine();
-        if (!NumberUtils.isParsable(ifIsParsable) && !(Integer.parseInt(ifIsParsable) >= 0)) {
+        if (NumberUtils.isParsable(ifIsParsable) && Integer.parseInt(ifIsParsable) >= 0) {
+            index = Integer.parseInt(ifIsParsable);
+            Path path = Paths.get("./src/main/resources/tasks.csv");
+            try {
+                counter = Files.readAllLines(path).size();
+                if (index < counter) {
+                    tab = Files.readAllLines(path).toArray(new String[0]);
+                    System.out.println(tab.length);
+                }
+            } catch (IOException | ArrayIndexOutOfBoundsException e) {
+                System.out.println(e);
+            }
+
+            String[] forCopyToFile = ArrayUtils.remove(tab, index);
+            for (String copy : forCopyToFile) {
+                chain1.append(copy).append("\n");
+            }
+
+            forReplace = chain1.toString();
+            Path path1 = Paths.get("./src/main/resources/tasks.csv");
+
+            try {
+                Files.writeString(path1, forReplace);
+                if (tab.length > forCopyToFile.length) {
+                    System.out.println(index + "\n" + "Value was successfully deleted");
+                }
+            } catch (IOException ex) {
+                System.out.println("The file could not be saved");
+            }
+        } else
             System.out.println("Incorrect argument passed. Please give number greater or equal 0");
-        }
-        index = Integer.parseInt(ifIsParsable);
-        System.out.println(index);
-        Path path = Paths.get("./src/main/resources/tasks.csv");
-        try {
-            counter = Files.readAllLines(path).size();
-            if (index < counter) {
-                tab = Files.readAllLines(path).toArray(new String[0]);
-                System.out.println(tab.length);
-            }
-        } catch (IOException e) {
-            System.out.println(e);
-        }
 
-        String[] forCopyToFile = ArrayUtils.remove(tab, index);
-        for (String copy : forCopyToFile) {
-            chain1.append(copy).append("\n");
-        }
-
-        forReplace = chain1.toString();
-        Path path1 = Paths.get("./src/main/resources/tasks.csv");
-
-        try {
-            Files.writeString(path1, forReplace);
-            if (tab.length > forCopyToFile.length) {
-                System.out.println(index + "\n" + "Value was successfully deleted");
-            }
-        } catch (IOException ex) {
-            System.out.println("The file could not be saved");
-        }
     }
-
     public static void printTaskList() {
         Path path = Paths.get("./src/main/resources/tasks.csv");
         try {
